@@ -1,8 +1,28 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model LoginModel
+
+
+@{
+    ViewData["Title"] = "Main Page";
 }
 
-<div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="6000">
+<h1 class="text-center">Welcome to PongGame</h1>
+
+
+<form class="main-page-margins">
+    <div class="form-group" >
+        <input class="form-control" type="text" asp-for="Name" placeholder="Please Enter yor name." >
+    </div>
+    <div class="form-group">
+        <button class="btn btn-success btn-lg btn-block">Play!</button>
+    </div>
+</form>
+
+
+
+
+
+
+@*<div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="6000">
     <ol class="carousel-indicators">
         <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
         <li data-target="#myCarousel" data-slide-to="1"></li>
@@ -91,4 +111,4 @@
             <li><a href="https://go.microsoft.com/fwlink/?LinkID=398609">Publish to Microsoft Azure Web Apps</a></li>
         </ul>
     </div>
-</div>
+</div>*@
