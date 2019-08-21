@@ -51,11 +51,22 @@ namespace PongGame.Controllers
 
             return View();
         }
+        //public IActionResult OnPost()
+        //{
+        //    //throw new Exception("stop");
+        //    return new JsonResult("Ajax");
+        //}
 
         public IActionResult Contact()
         {
             ViewData["Message"] = "Your contact page.";
 
+            return View();
+        }
+
+        public IActionResult GameBoard()
+        {
+            
             return View();
         }
 
@@ -69,6 +80,18 @@ namespace PongGame.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+        static volatile public int ballx = 0;
+        
+        [ValidateAntiForgeryToken]
+        public IActionResult OnPost()
+        {
+            ballx = ballx + 1;
+            return new JsonResult(ballx.ToString());
+        }
+
+
+
     }
 }
 

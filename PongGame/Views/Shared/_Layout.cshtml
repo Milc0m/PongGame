@@ -11,10 +11,10 @@
         
     </environment>
     <environment exclude="Development">
-        <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/css/bootstrap.min.css"
+        @*<link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/css/bootstrap.min.css"
               asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
-              asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
-        <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
+              asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />*@
+        @*<link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />*@
     </environment>
 </head>
 <body>
@@ -47,8 +47,25 @@
             <p>&copy; 2019 - Milc0m</p>
         </footer>
     </div>
+    
+<!-- Set the site root for javascript in _Layout.cshtml.-->
+@if (!String.IsNullOrWhiteSpace(@Context.Request.PathBase.Value))
+{
+    /* LIVE - includes virtual directory */
+    <script>
+        window.siteRoot = "@Context.Request.Scheme" + "://" + "@Context.Request.Host.Value" + "@Context.Request.PathBase.Value" + "/";
+    </script>
+}
+else
+{
+    /* DEBUG - no virutal directory, e.g. IIS Express */
+    <script>
+        window.siteRoot = "@Context.Request.Scheme" + "://" + "@Context.Request.Host.Value" + "/";
+    </script>
+}
 
-    <environment include="Development">
+
+<environment include="Development">
         <script src="~/lib/jquery/dist/jquery.js"></script>
         <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
         <script src="~/js/site.js" asp-append-version="true"></script>

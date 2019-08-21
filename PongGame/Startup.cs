@@ -35,6 +35,7 @@ namespace PongGame
                     opts.Password.RequireDigit = true; 
                 })
                 .AddEntityFrameworkStores<ApplicationContext>();
+            services.AddAntiforgery(o => o.HeaderName = "XSRF-TOKEN");
             services.AddMvc();
         }
 
