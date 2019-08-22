@@ -2,17 +2,24 @@
 // for details on configuring this project to bundle and minify static web assets.
 
 // Write your JavaScript code.
-function moveSection(idStr, xOffset, yOffset) {
-    console.log("called");
-    var domElemnt = document.getElementById(idStr);
-    if (domElemnt) {
-        var transformAttr = ' translate(' + xOffset + ',' + yOffset + ')';
-        domElemnt.setAttribute('transform', transformAttr);
-    }
+
+
+function moveCircle(idStr2, deltaX, deltaY) {
+    var circle = document.getElementById(idStr2);
+    var coordX = parseInt(circle.getAttribute("cx"));
+    valueX = coordX + deltaX;
+    var coordY = parseInt(circle.getAttribute("cy"));
+    valueY = coordY + deltaY;
+    circle.setAttributeNS(null, "cx", valueX);
+    circle.setAttributeNS(null, "cy", valueY);
 }
 
-function startGame(idStr) {
-    var intervalID = setInterval(function () { getCoords(idStr) }, 1000);
+
+
+function startGame(idStr2) {
+    console.log("Begin startgame")
+    var intervalID = setInterval(function () { moveCircle(idStr2, 10, 10) }, 10);
+    console.log("end startgame")
 }
 
 
@@ -31,7 +38,7 @@ function getCoords(idStr) {
         dataType: "json"
     }).done(function (data) {
         console.log(data);
-        moveSection(idStr, data, 1);
+        startGame(idStr2);
     })
 }
  

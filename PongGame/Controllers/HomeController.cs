@@ -51,12 +51,7 @@ namespace PongGame.Controllers
 
             return View();
         }
-        //public IActionResult OnPost()
-        //{
-        //    //throw new Exception("stop");
-        //    return new JsonResult("Ajax");
-        //}
-
+        
         public IActionResult Contact()
         {
             ViewData["Message"] = "Your contact page.";
