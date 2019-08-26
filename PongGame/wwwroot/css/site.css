@@ -48,15 +48,8 @@ body {
     width: 36%;
 }
 
-.menu-wrapper {
-    width: 100%;
-    display: table;
-}
-
 .menu-item {
-    display: table-cell;
-    text-align: center;
-    font-size: 17px;
+    font-size: 15px;
 }
 
 .btn-mybutton {

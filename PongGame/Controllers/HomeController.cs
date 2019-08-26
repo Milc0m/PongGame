@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using PongGame.Models;
@@ -59,9 +60,10 @@ namespace PongGame.Controllers
             return View();
         }
 
+        [Authorize]
         public IActionResult GameBoard()
         {
-            
+            ViewData["Message"] = "Game.";
             return View();
         }
 
@@ -77,12 +79,12 @@ namespace PongGame.Controllers
         }
 
         static volatile public int ballx = 0;
-        
-        [ValidateAntiForgeryToken]
+
+        //[ValidateAntiForgeryToken]
         public IActionResult OnPost()
         {
             ballx = ballx + 1;
-            return new JsonResult(ballx.ToString());
+            return new JsonResult("{ \"x\": \"" + ballx.ToString() + "\", \"y\": \"10\" }");
         }
 
 
