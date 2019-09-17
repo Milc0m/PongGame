@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using PongGame.Models;
 
 namespace PongGame.Controllers
@@ -18,6 +19,9 @@ namespace PongGame.Controllers
         {
             _userManager = userManager;
         }
+
+        Ball ball = new Ball();
+        private string jsonInput;
 
         public IActionResult Index()
         {
@@ -63,6 +67,14 @@ namespace PongGame.Controllers
         [Authorize]
         public IActionResult GameBoard()
         {
+
+            //ball.x = 150;
+            //ball.y = 70;
+            //ball.speed = 1000;
+
+            ViewBag.x = Ball.x;
+            //ViewBag.ballCoordY = ball.y;
+            //ViewBag.ballSpeed = ball.speed;
             ViewData["Message"] = "Game.";
             return View();
         }
@@ -79,12 +91,20 @@ namespace PongGame.Controllers
         }
 
         static volatile public int ballx = 0;
+        static volatile public int bally = 0;
 
         //[ValidateAntiForgeryToken]
         public IActionResult OnPost()
         {
+
+            Ball.x = Ball.x + 10;
+            //ball.y = ball.y + 10;
+            //int tempX = ball.x + 10;
+            //ball.x = tempX;
+            jsonInput = JsonConvert.SerializeObject(ball);
             ballx = ballx + 1;
-            return new JsonResult("{ \"x\": \"" + ballx.ToString() + "\", \"y\": \"10\" }");
+            bally = bally + 1;
+            return new JsonResult("{ \"x\": \"" + ballx.ToString() + "\", \"y\":  \"" + bally.ToString() + "\" }");
         }
 
 
