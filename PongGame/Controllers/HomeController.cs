@@ -20,7 +20,7 @@ namespace PongGame.Controllers
             _userManager = userManager;
         }
 
-        Ball ball = new Ball();
+        //Ball ball = new Ball();
         private string jsonInput;
 
         public IActionResult Index()
@@ -72,7 +72,7 @@ namespace PongGame.Controllers
             //ball.y = 70;
             //ball.speed = 1000;
 
-            ViewBag.x = Ball.x;
+            //ViewBag.x = Ball.x;
             //ViewBag.ballCoordY = ball.y;
             //ViewBag.ballSpeed = ball.speed;
             ViewData["Message"] = "Game.";
@@ -90,22 +90,22 @@ namespace PongGame.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        static volatile public int ballx = 0;
-        static volatile public int bally = 0;
+        //static volatile public int ballx = 0;
+        //static volatile public int bally = 0;
 
         //[ValidateAntiForgeryToken]
-        public IActionResult OnPost()
-        {
+        //public IActionResult OnPost()
+        //{
 
-            Ball.x = Ball.x + 10;
-            //ball.y = ball.y + 10;
-            //int tempX = ball.x + 10;
-            //ball.x = tempX;
-            jsonInput = JsonConvert.SerializeObject(ball);
-            ballx = ballx + 1;
-            bally = bally + 1;
-            return new JsonResult("{ \"x\": \"" + ballx.ToString() + "\", \"y\":  \"" + bally.ToString() + "\" }");
-        }
+        //    //Ball.x = Ball.x + 10;
+        //    //ball.y = ball.y + 10;
+        //    //int tempX = ball.x + 10;
+        //    //ball.x = tempX;
+        //    jsonInput = JsonConvert.SerializeObject(ball);
+        //    ballx = ballx + 1;
+        //    bally = bally + 1;
+        //    return new JsonResult("{ \"x\": \"" + ballx.ToString() + "\", \"y\":  \"" + bally.ToString() + "\" }");
+        //}
 
 
 
