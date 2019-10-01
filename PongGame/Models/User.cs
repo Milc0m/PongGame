@@ -9,5 +9,7 @@ namespace PongGame.Models
         public string Name { get; set; }
         public DateTime LastVisit { get; set; }
         public DateTime RegistrationDate { get; set; }
+
+        
     }
 }

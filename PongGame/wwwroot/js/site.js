@@ -6,6 +6,7 @@ const cvs = document.getElementById("pong");
 const ctx = cvs.getContext("2d");
 
 const user = {
+    id: "none",
     x: 0,
     y: cvs.height/2 - 50,
     width: 10,
@@ -15,6 +16,7 @@ const user = {
 }
 
 const user2 = {
+    id: "none",
     x: cvs.width - 10,
     y: cvs.height/2 - 50,
     width: 10,
@@ -86,7 +88,8 @@ cvs.addEventListener("mousemove", movePaddle);
 
 function movePaddle(evt) {
     let rect = cvs.getBoundingClientRect();
-    user.y = evt.clientY - rect.top - user.height/2;
+    user.y = evt.clientY - rect.top - user.height / 2;
+   
 }
 
 function resetBall() {
@@ -111,13 +114,25 @@ function collision(b, p) {
     return p.left < b.right && p.top < b.bottom && p.right > b.left && p.bottom > b.top;
 }
 
+var send = 0;
+
 function update() {
+    if (send == 0) {
+        sendRequest(user.y);
+        send = 1;
+    } else {
+        send = 0;
+    }
+
+    
+
     ball.x += ball.velocityX;
     ball.y += ball.velocityY;
 
     //AI for test
-    let computerLevel = 0.2;
-    user2.y += ((ball.y - (user2.y + user2.height / 2))) * computerLevel;
+    //let computerLevel = 0.2;
+    //user2.y += ((ball.y - (user2.y + user2.height / 2))) * computerLevel;
+    
 
     if (ball.y + ball.radius > cvs.height || ball.y - ball.radius < 0) {
         ball.velocityY = - ball.velocityY;
@@ -155,10 +170,56 @@ function game() {
     render();
 }
 
+function startGame() {
+    const framePerSecond = 50;
+    gameloop = setInterval(game, 1000 / framePerSecond);
+    gamePaused = false;
+}
+
 ////loop
-const framePerSecond = 70;
-gameloop = setInterval(game, 1000 / framePerSecond);
-gamePaused = false;
+
+String.prototype.replaceAll = function (str1, str2, ignore) {
+    return this.replace(new RegExp(str1.replace(/([\/\,\!\\\^\$\{\}\[\]\(\)\.\*\+\?\|\<\>\-\&])/g, "\\$&"), (ignore ? "gi" : "g")), (typeof (str2) == "string") ? str2.replace(/\$/g, "$$$$") : str2);
+} 
+
+function sendRequest2(id) {
+    var http = new XMLHttpRequest();
+    var url = 'OnPost';
+    var params = JSON.stringify({ "Id": id, "Type" : "search"}); /*'Type="search";Id=' + id;*/;
+    http.open('POST', url, true);
+
+    //Send the proper header information along with the request
+    http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+
+    http.onreadystatechange = function () {//Call a function when the state changes.
+        if (http.readyState == 4 && http.status == 200) {
+
+            var response = http.responseText.toString().replaceAll('"', '');
+
+            user2.id = response;
+            //var responseInt = response;
+            console.log(response);
+            //console.log(http.responseText);
+        }
+    }
+    http.send(params);
+}
+
+
+var oponentLoop = setInterval(findOpponent, 1000);
+function findOpponent() {
+    var userId = document.getElementById('userId');
+    textContent = userId.textContent;
+    sendRequest2(textContent);
+    
+    if (user2.id.toString() != "none") {
+        clearInterval(oponentLoop);
+        startGame();
+    }
+}
+
+// write message
+
 
 function pauseGame() {
     if (!gamePaused) {
@@ -169,3 +230,25 @@ function pauseGame() {
         gamePaused = false;
     }
 };
+
+function sendRequest(y) {
+    var http = new XMLHttpRequest();
+    var url = 'OnPost';
+    var params = 'Y=' + y/*.toString()*/ ;
+    http.open('POST', url, true);
+
+    //Send the proper header information along with the request
+    http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+
+    http.onreadystatechange = function () {//Call a function when the state changes.
+        if (http.readyState == 4 && http.status == 200) {
+           
+            var response = http.responseText;
+            user2.y = parseInt(response);
+            //var responseInt = response;
+            console.log(response);
+            //console.log(http.responseText);
+        }
+    }
+    http.send(params);
+}

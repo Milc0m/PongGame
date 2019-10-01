@@ -15,10 +15,17 @@
    
 </head>
 <body>
-    <div>
-        <input id="pause" class="btn btn-warning btn-sm" onclick="pauseGame(this)" type="button" value="Pause" style="margin-top: 10px; margin-left: 400px" />
-        <input id="pause" class="btn btn-success btn-sm" type="button" value="Find Opponent" style="margin-top: 10px; margin-left: 50px" />
-    </div>
+<div>
+    <input id="pause" class="btn btn-warning btn-sm" onclick="pauseGame(this)" type="button" value="Pause" style="margin-top: 10px; margin-left: 400px" />
+    @*<input id="pause" class="btn btn-success btn-sm" type="button" value="Find Opponent" style="margin-top: 10px; margin-left: 50px" />*@
+</div>
+
+
+<div id="chatroom"></div>
+<div id="userId">@ViewBag.userId</div>
+<div >@ViewBag.searching</div>
+<div >@ViewBag.name</div>
+<div >@ViewBag.opp</div>
 
 <canvas id="pong" width="800" height="600" style="margin-top: 20px"></canvas>
 </body>

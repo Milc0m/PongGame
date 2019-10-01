@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -12,6 +13,17 @@ using PongGame.Models;
 
 namespace PongGame.Controllers
 {
+    public class Parammetrs
+    {
+        //public string X { get; set; }
+        //public string Y { get; set; }
+        public int Y { get; set; }
+        public string Id { get; set; }
+        public string Type { get; set; }
+        
+    }
+
+
     public class HomeController : Controller
     {
         private readonly UserManager<User> _userManager;
@@ -21,7 +33,7 @@ namespace PongGame.Controllers
         }
 
         //Ball ball = new Ball();
-        private string jsonInput;
+        //private string jsonInput;
 
         public IActionResult Index()
         {
@@ -67,14 +79,27 @@ namespace PongGame.Controllers
         [Authorize]
         public IActionResult GameBoard()
         {
+            var userId = _userManager.GetUserId(HttpContext.User);
+            string userIdstring = userId;
+            ViewBag.userId = userId;
+            User user = _userManager.FindByIdAsync(userId).Result;
+            Player player = new Player();
+            player.Id = userId;
+            player.Name = user.Name;
+            player.SearchingForOpponent = true;
+            ViewBag.searching = player.SearchingForOpponent;
+            ViewBag.name = player.Name;
+            
+            Player.players.Add(player);
+            Player opponent;
+            if (player.SearchingForOpponent && Player.players.Count > 1)
+            {
+                
+                opponent = Player.players.Where(x => x.Id != player.Id && x.SearchingForOpponent /*&& !x.IsPlaying*/).FirstOrDefault();
+                ViewBag.opp = opponent.Name;
+            }
 
-            //ball.x = 150;
-            //ball.y = 70;
-            //ball.speed = 1000;
 
-            //ViewBag.x = Ball.x;
-            //ViewBag.ballCoordY = ball.y;
-            //ViewBag.ballSpeed = ball.speed;
             ViewData["Message"] = "Game.";
             return View();
         }
@@ -93,19 +118,21 @@ namespace PongGame.Controllers
         //static volatile public int ballx = 0;
         //static volatile public int bally = 0;
 
-        //[ValidateAntiForgeryToken]
-        //public IActionResult OnPost()
-        //{
+        [HttpPost]
+        public IActionResult OnPost([FromBody]string strmodel)
+        {
+            //if (model.Type == "search")
+            //{
+            //    return new JsonResult(model.Id);
+            //}
+            //else
+            //{
+            //    return new JsonResult("none");
+            //}
+            return new JsonResult(strmodel);
+            //return new JsonResult(model.Y);
 
-        //    //Ball.x = Ball.x + 10;
-        //    //ball.y = ball.y + 10;
-        //    //int tempX = ball.x + 10;
-        //    //ball.x = tempX;
-        //    jsonInput = JsonConvert.SerializeObject(ball);
-        //    ballx = ballx + 1;
-        //    bally = bally + 1;
-        //    return new JsonResult("{ \"x\": \"" + ballx.ToString() + "\", \"y\":  \"" + bally.ToString() + "\" }");
-        //}
+        }
 
 
 
