@@ -165,6 +165,8 @@ function sendRequest(y) {
             ball.x = obj2.BallX;
             ball.y = obj2.BallY;
             user2.y = parseFloat(obj2.Y);
+            user2.score = obj2.ScoreOpponent;
+            user.score = obj2.ScorePlayer;
             //console.log(response);
         }
     }

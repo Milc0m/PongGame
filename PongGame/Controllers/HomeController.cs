@@ -124,6 +124,8 @@ namespace PongGame.Controllers
                 player.ball.Radius = ballRadius;
                 player.ball.Velocity.X = 5;
                 player.ball.Velocity.Y = 5;
+                player.parameters.ScoreOpponent = 0;
+                player.parameters.ScorePlayer = 0;
                 opponent.IAmDaddy = false;
                 
                 playersList.Add(opponent);
@@ -197,10 +199,12 @@ namespace PongGame.Controllers
 
                     if (playerJson.ball.Center.X - playerJson.ball.Radius < 0)
                     {
+                        playerJson.parameters.ScorePlayer += 1;
                         resetBall();
                     }
                     else if (playerJson.ball.Center.X + playerJson.ball.Radius > gameWidth)
                     {
+                        playerJson.parameters.ScoreOpponent += 1;
                         resetBall();
                     }
 
@@ -260,10 +264,15 @@ namespace PongGame.Controllers
                 {
                     paramJson.BallX = gameWidth - oponentrJson.ball.Center.X;
                     paramJson.BallY = oponentrJson.ball.Center.Y;
+                    playerJson.parameters.ScorePlayer = oponentrJson.parameters.ScoreOpponent;
+                    playerJson.parameters.ScoreOpponent = oponentrJson.parameters.ScorePlayer;
                 }
 
+                paramJson.ScoreOpponent = playerJson.parameters.ScoreOpponent;
+                paramJson.ScorePlayer = playerJson.parameters.ScorePlayer;
                 playerJson.parameters = paramJson;
                 paramJson.Y = oponentrJson.pad.TopLeft.Y;
+               
             }
 
             return new JsonResult(JsonConvert.SerializeObject(paramJson));
