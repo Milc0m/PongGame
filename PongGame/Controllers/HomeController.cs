@@ -89,7 +89,6 @@ namespace PongGame.Controllers
             ViewBag.width = gameWidth;
             ViewBag.height = gameHeight;
 
-
             var userId = _userManager.GetUserId(HttpContext.User);
             string userIdstring = userId;
             ViewBag.userId = userId;
@@ -101,29 +100,20 @@ namespace PongGame.Controllers
             ViewBag.searching = player.SearchingForOpponent;
             ViewBag.name = player.Name;
             
-
             player.pad.TopLeft.X = 0;
             player.pad.TopLeft.Y = gameHeight/2 - 50;
             player.pad.BottomRight.X = 10;
             player.pad.BottomRight.Y = gameHeight / 2 + 50;
-
-           
-            
-
 
             if (!Player.players.Any(x => x.Id == userId))
             {
                 Player.players.Add(player);
             }
 
-            
             Player opponent;
-            //opponent.pad.TopLeft.X = gameWidth - 10;
-            //TODO find why dont work when player equals 1
             
            if (player.SearchingForOpponent && Player.players.Count > 1)
             {
-                
                 ViewBag.List = Player.players;
                 opponent = Player.players.Where(x => x.Id != player.Id && x.SearchingForOpponent /*&& !x.IsPlaying*/).FirstOrDefault();
                 opponent.OpponentId = player.Id;
@@ -134,15 +124,12 @@ namespace PongGame.Controllers
                 player.ball.Radius = ballRadius;
                 player.ball.Velocity.X = 5;
                 player.ball.Velocity.Y = 5;
-
-
                 opponent.IAmDaddy = false;
                 
                 playersList.Add(opponent);
                 playersList.Add(player);
                 Player playerList = playersList.Where(x => x.Id == player.Id).FirstOrDefault();
                 
-
                 //delete from Player.players
                 Player.players.Remove(opponent);
                 Player.players.Remove(player);
@@ -164,9 +151,6 @@ namespace PongGame.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
-
-
-        
 
         [HttpPost]
         public IActionResult OnPost([FromBody]dynamic parametrs)
@@ -190,10 +174,6 @@ namespace PongGame.Controllers
 
                 if (playerJson.IAmDaddy)
                 {
-                    playerJson.ball.Center.X += playerJson.ball.Velocity.X;
-                    playerJson.ball.Center.Y += playerJson.ball.Velocity.Y;
-                    
-
                     if (playerJson.ball.Center.Y + playerJson.ball.Radius > gameHeight ||
                         playerJson.ball.Center.Y - playerJson.ball.Radius < 0)
                     {
@@ -254,45 +234,40 @@ namespace PongGame.Controllers
 
                         playerJson.ball.Velocity.X = playerJson.ball.Speed * (float)Math.Cos(angleRadius);
                         playerJson.ball.Velocity.Y = playerJson.ball.Speed *  -(float)Math.Sin(angleRadius);
-
-                        //playerJson.ball.Speed += 1;
                     }
 
                     // opponent collision
-                    if (collisionPlayer(oponentrJson.pad, playerJson.ball))
+                   Pad realPad = new Pad();
+                   realPad.TopLeft.X = gameWidth - padWidth;
+                   realPad.TopLeft.Y = oponentrJson.pad.TopLeft.Y;
+                   if (collisionPlayer(realPad, playerJson.ball))
                     {
-                        var colliedPoint = (oponentrJson.pad.TopLeft.Y + (padHeight / 2)) - playerJson.ball.Center.Y;
+                        var colliedPoint = (realPad.TopLeft.Y + (padHeight / 2)) - playerJson.ball.Center.Y;
                         colliedPoint = colliedPoint / (padHeight / 2);
 
                         var angleRadius = colliedPoint * (5 * Math.PI / 12);
 
-                        playerJson.ball.Velocity.X = playerJson.ball.Speed * (float)Math.Cos(angleRadius);
+                        playerJson.ball.Velocity.X = playerJson.ball.Speed * -(float)Math.Cos(angleRadius);
                         playerJson.ball.Velocity.Y = playerJson.ball.Speed * -(float)Math.Sin(angleRadius);
-
-                        //playerJson.ball.Speed += 1;
                     }
 
-
+                    playerJson.ball.Center.X += playerJson.ball.Velocity.X;
+                    playerJson.ball.Center.Y += playerJson.ball.Velocity.Y;
                     paramJson.BallX = playerJson.ball.Center.X;
                     paramJson.BallY = playerJson.ball.Center.Y;
                 }
                 else
                 {
-                    
-                    //paramJson.VelocityX = -oponentrJson.ball.Velocity.X;
                     paramJson.BallX = gameWidth - oponentrJson.ball.Center.X;
                     paramJson.BallY = oponentrJson.ball.Center.Y;
                 }
 
                 playerJson.parameters = paramJson;
                 paramJson.Y = oponentrJson.pad.TopLeft.Y;
-
             }
 
             return new JsonResult(JsonConvert.SerializeObject(paramJson));
-
         }
-
     }
 }
 
