@@ -9,8 +9,8 @@ const user = {
     id: "none",
     x: 0,
     y: cvs.height/2 - 50,
-    width: 10,
-    height: 100,
+    width: document.getElementById('padWidth').value/*10*/,
+    height: document.getElementById('padHeight').value/*100*/,
     color: "WHITE",
     score: 0
 }
@@ -19,8 +19,8 @@ const user2 = {
     id: "none",
     x: cvs.width - 10,
     y: cvs.height/2 - 50,
-    width: 10,
-    height: 100,
+    width: document.getElementById('padWidth').value/*10*/,
+    height: document.getElementById('padHeight').value/*100*/,
     color: "WHITE",
     score: 0
 }
@@ -28,7 +28,7 @@ const user2 = {
 const ball = {
     x: cvs.width / 2,
     y: cvs.height / 2,
-    radius: 10,
+    radius: document.getElementById('ballRadius').value,
     speed: 5,
     velocityX: 5,
     velocityY: 5,
@@ -81,6 +81,7 @@ function render() {
     drawRect(user.x, user.y, user.width, user.height, user.color);
     drawRect(user2.x, user2.y, user2.width, user2.height, user2.color);
     //ball
+    console.log(ball.radius);
     drawCircle(ball.x, ball.y, ball.radius, ball.color);
 }
 
@@ -88,8 +89,14 @@ cvs.addEventListener("mousemove", movePaddle);
 
 function movePaddle(evt) {
     let rect = cvs.getBoundingClientRect();
-    user.y = evt.clientY - rect.top - user.height / 2;
-   
+    let mouseY = evt.clientY;
+    if (mouseY - 50 < rect.top) {
+        user.y = 0;
+    } else if (mouseY + 50 > rect.bottom) {
+        user.y = 500;
+    } else {
+        user.y = evt.clientY - rect.top - user.height / 2;
+    }
 }
 
 function resetBall() {
@@ -117,56 +124,50 @@ function collision(b, p) {
 var send = 0;
 
 function update() {
+    ////AI for test
+    ////let computerLevel = 0.2;
+    ////user2.y += ((ball.y - (user2.y + user2.height / 2))) * computerLevel;
+    
+
+    //if (ball.y + ball.radius > cvs.height || ball.y - ball.radius < 0) {
+    //    ball.velocityY = - ball.velocityY;
+    //}
+
+    //let player = (ball.x + ball.radius < cvs.width / 2) ? user : user2;
+
+    //if (collision(ball, player)) {
+    //    let colliedPoint = ball.y - (player.y + player.height / 2);
+    //    colliedPoint = colliedPoint / (player.height/2);
+
+    //    let angleRadius = colliedPoint * (Math.PI/4);
+
+    //    let direction = (ball.x + ball.radius < cvs.width / 2) ? 1 : -1;
+
+
+    //    ball.velocityX = direction * ball.speed * Math.cos(angleRadius);
+    //    ball.velocityY = ball.speed * Math.sin(angleRadius);
+
+    //    ball.speed += 0.5;
+    //}
+
+    //if (ball.x - ball.radius < 0) {
+    //    user2.score++;
+    //    resetBall();
+    //} else if (ball.x + ball.radius > cvs.width) {
+    //    user.score++;
+    //    resetBall();
+    //}
+}
+
+//Init
+function game() {
     if (send == 0) {
         sendRequest(user.y);
         send = 1;
     } else {
         send = 0;
     }
-
     
-
-    ball.x += ball.velocityX;
-    ball.y += ball.velocityY;
-
-    //AI for test
-    //let computerLevel = 0.2;
-    //user2.y += ((ball.y - (user2.y + user2.height / 2))) * computerLevel;
-    
-
-    if (ball.y + ball.radius > cvs.height || ball.y - ball.radius < 0) {
-        ball.velocityY = - ball.velocityY;
-    }
-
-    let player = (ball.x + ball.radius < cvs.width / 2) ? user : user2;
-
-    if (collision(ball, player)) {
-        let colliedPoint = ball.y - (player.y + player.height / 2);
-        colliedPoint = colliedPoint / (player.height/2);
-
-        let angleRadius = colliedPoint * (Math.PI/4);
-
-        let direction = (ball.x + ball.radius < cvs.width / 2) ? 1 : -1;
-
-
-        ball.velocityX = direction * ball.speed * Math.cos(angleRadius);
-        ball.velocityY = ball.speed * Math.sin(angleRadius);
-
-        ball.speed += 0.5;
-    }
-
-    if (ball.x - ball.radius < 0) {
-        user2.score++;
-        resetBall();
-    } else if (ball.x + ball.radius > cvs.width) {
-        user.score++;
-        resetBall();
-    }
-}
-
-//Init
-function game() {
-    update();
     render();
 }
 
@@ -182,44 +183,45 @@ String.prototype.replaceAll = function (str1, str2, ignore) {
     return this.replace(new RegExp(str1.replace(/([\/\,\!\\\^\$\{\}\[\]\(\)\.\*\+\?\|\<\>\-\&])/g, "\\$&"), (ignore ? "gi" : "g")), (typeof (str2) == "string") ? str2.replace(/\$/g, "$$$$") : str2);
 } 
 
-function sendRequest2(id) {
-    var http = new XMLHttpRequest();
-    var url = 'OnPost';
-    var params = JSON.stringify({ "Id": id, "Type" : "search"}); /*'Type="search";Id=' + id;*/;
-    http.open('POST', url, true);
+//function sendRequest2(id) {
+//    var http = new XMLHttpRequest();
+//    var url = 'OnPost';
+//    var params = JSON.stringify({ "Id": id, "Type" : "search"}); /*'Type="search";Id=' + id;*/;
+//    http.open('POST', url, true);
 
-    //Send the proper header information along with the request
-    http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+//    Send the proper header information along with the request
+//    http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
 
-    http.onreadystatechange = function () {//Call a function when the state changes.
-        if (http.readyState == 4 && http.status == 200) {
+//    http.onreadystatechange = function () {//Call a function when the state changes.
+//        if (http.readyState == 4 && http.status == 200) {
 
-            var response = http.responseText.toString().replaceAll('"', '');
+//            var response = http.responseText.toString().replaceAll('"', '');
 
-            user2.id = response;
-            //var responseInt = response;
-            console.log(response);
-            //console.log(http.responseText);
-        }
-    }
-    http.send(params);
-}
+//            user2.id = response;
+//            var responseInt = response;
+//            console.log(response);
+//            console.log(http.responseText);
+//        }
+//    }
+//    http.send(params);
+//}
 
 
-var oponentLoop = setInterval(findOpponent, 1000);
-function findOpponent() {
-    var userId = document.getElementById('userId');
-    textContent = userId.textContent;
-    sendRequest2(textContent);
+//var oponentLoop = setInterval(findOpponent, 1000);
+//function findOpponent() {
+//    var userId = document.getElementById('userId');
+//    textContent = userId.textContent;
+//    sendRequest2(textContent);
     
-    if (user2.id.toString() != "none") {
-        clearInterval(oponentLoop);
-        startGame();
-    }
-}
+//    if (user2.id.toString() != "none") {
+//        clearInterval(oponentLoop);
+//        startGame();
+//    }
+//}
 
 // write message
 
+startGame();
 
 function pauseGame() {
     if (!gamePaused) {
@@ -234,21 +236,39 @@ function pauseGame() {
 function sendRequest(y) {
     var http = new XMLHttpRequest();
     var url = 'OnPost';
-    var params = 'Y=' + y/*.toString()*/ ;
+    var params = JSON.stringify({ "Y": y, "Id": document.getElementById('userId').textContent, "BallX": ball.x, "BallY": ball.y, "VelocityX": ball.velocityX, "VelocityY": ball.velocityY }); 
     http.open('POST', url, true);
 
+   
+
     //Send the proper header information along with the request
-    http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    http.setRequestHeader('Content-type', 'application/json'/*'application/x-www-form-urlencoded'*/);
 
     http.onreadystatechange = function () {//Call a function when the state changes.
         if (http.readyState == 4 && http.status == 200) {
            
             var response = http.responseText;
-            user2.y = parseInt(response);
-            //var responseInt = response;
+            //var xren2 = response.toString().substr(1).slice(0, -1);
+            var obj = JSON.parse(response);
+            var obj2 = JSON.parse(obj)
+
+            var div = document.getElementById('searchingOpponent');
+
+            if (obj2.Id == "none") {
+                div.innerHTML = 'Searching for opponent';
+                return;
+            }
+            div.innerHTML = obj2.Id;
+            ball.x = obj2.BallX;
+            ball.y = obj2.BallY;
+            //ball.velocityX = obj2.VelocityX;
+            //ball.velocityY = obj2.VelocityY;
+
+            user2.y = parseFloat(obj2.Y);
+            update();
             console.log(response);
-            //console.log(http.responseText);
         }
     }
     http.send(params);
 }
+

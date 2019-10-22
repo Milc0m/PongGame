@@ -15,18 +15,32 @@
    
 </head>
 <body>
-<div>
-    <input id="pause" class="btn btn-warning btn-sm" onclick="pauseGame(this)" type="button" value="Pause" style="margin-top: 10px; margin-left: 400px" />
-    @*<input id="pause" class="btn btn-success btn-sm" type="button" value="Find Opponent" style="margin-top: 10px; margin-left: 50px" />*@
-</div>
+    <div>
+        <input id="pause" class="btn btn-warning btn-sm" onclick="pauseGame(this)" type="button" value="Pause" style="margin-top: 10px; margin-left: 400px" />
+        <input type="hidden" id="ballRadius" value="@ViewBag.ballRadius">
+        <input type="hidden" id="padWidth" value="@ViewBag.padWidth">
+        <input type="hidden" id="padHeight" value="@ViewBag.padHeight">
+        @*<input id="pause" class="btn btn-success btn-sm" type="button" value="Find Opponent" style="margin-top: 10px; margin-left: 50px" />*@
+    </div>
 
 
-<div id="chatroom"></div>
-<div id="userId">@ViewBag.userId</div>
-<div >@ViewBag.searching</div>
-<div >@ViewBag.name</div>
-<div >@ViewBag.opp</div>
+    <div id="chatroom"></div>
+    <div id="userId">@ViewBag.userId</div>
+    <div>@ViewBag.searching</div>
+    <div>@ViewBag.name</div>
+    @if (ViewBag.daddy == true)
+    {
+        <div>Daddy</div>
+    }
+    else
+    {
+        <div>Vasja</div>
+    }
+    <div id="searchingOpponent"></div>
+    
+    
+<canvas id="pong" width="@ViewBag.width" height="@ViewBag.height" style="margin-top: 20px"></canvas>
+    
 
-<canvas id="pong" width="800" height="600" style="margin-top: 20px"></canvas>
 </body>
 </html>
